@@ -1,20 +1,39 @@
 import random
+import copy
 
-replaces = {
-    ',': {'chance': (1, 2, [1]), 'choice': [', бля,', ', нахуй,', ', сука,', ', ебать,', ', пидоры,', ', блять,']},
-    '.': {'chance': (1, 3, [1]), 'choice': ['. Вот такой пиздец.', '. Вот такая хрень.', '. Дохуя истина.', '. Ахуеть!']},
-    '!': {'chance': (1, 4, [1, 2]), 'choice': ['! Вот такой пиздец.', '! Вот такая хрень.', '! Дохуя истина.', '. Ахуеть!']},
-    '?': {'chance': [1, 5, [1]], 'choice': ['? Ты ахуел?', '? Рил такой пиздец?']},
-    ' ': {'chance': [1, 10, [1]], 'choice': [', нахуй, ', ', бля, ', ', сука, ', ', пидоры, ', ', eбать, ', ', блять, ']}
+class Replace:
+    def __init__(self, chance=100, choice=()):
+        self.chance = chance
+        self.choice = choice
+
+    def is_good(self):
+        return random.randint(0, 100) <= self.chance
+
+    def any(self):
+        return random.choice(self.choice)
+
+
+REPLACES = {
+    ',': Replace(50, [', бля,', ', нахуй,', ', сука,', ', ебать,', ', пидоры,', ', блять,']),
+    '.': Replace(33, ['. Вот такой пиздец.', '. Вот такая хрень.', '. Дохуя истина.', '. Ахуеть!']),
+    '!': Replace(50, ['! Вот такой пиздец.', '! Вот такая хрень.', '! Дохуя истина.', '. Ахуеть!']),
+    '?': Replace(20, ['? Ты ахуел?', '? Рил такой пиздец?']),
+    ' ': Replace(15, [', нахуй, ', ', бля, ', ', сука, ', ', пидоры, ', ', eбать, ', ', блять, '])
 }
 
 
-def modify(txt):
+def modify(txt, chances=None):
+    if chances is None:
+        chances = {}
+    repl = copy.deepcopy(REPLACES)
+    for s in chances.keys():
+        if s in repl:
+            repl[s].chance = chances[s]
     res = ''
 
     for ch in txt:
-        if ch in replaces and random.randint(*replaces[ch]['chance'][:2]) in replaces[ch]['chance'][2]:
-            res += random.choice(replaces[ch]['choice'])
+        if ch in REPLACES and REPLACES[ch].is_good():
+            res += REPLACES[ch].any()
         else:
             res += ch
 
@@ -25,7 +44,8 @@ def modify(txt):
     return res
 
 
-text = open('zadacha.txt').read()
+if __name__ == '__main__':
+    text = open('zadacha.txt').read()
 
-with open('zadacha_proceeed.txt', 'w') as f:
-    f.write(modify(text))
+    with open('zadacha_proceeed.txt', 'w') as f:
+        f.write(modify(text))

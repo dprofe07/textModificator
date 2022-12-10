@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Главная - преобразователь текста</title>
+    </head>
+
+    <body>
+        {% if not text %}
+            <h1>Преобразователь текста</h1>
+            <p>Эта программа позволяет преобразововать текст, добавляя маты в него (МНОГО).
+                Если вас это не устраивает, перейдите по <a href="javascript:window.close()">ссылке</a></p>
+            <form action="/" method="post">
+                <label for="space_chance">Шанс замены пробела на мат: </label>
+                <input id="space_chance" name="space_chance" type="number" max="100" min="0" value="{{ space_chance }}"/>
+                <br/>
+                <label for="dot_chance">Шанс замены точки на мат: </label>
+                <input id="dot_chance" name="dot_chance" type="number" max="100" min="0" value="{{ dot_chance }}"/>
+                <br/>
+                <label for="comma_chance">Шанс замены запятой на мат: </label>
+                <input id="comma_chance" name="comma_chance" type="number" max="100" min="0" value="{{ comma_chance }}"/>
+                <br/>
+                <label for="quest_mark_chance">Шанс замены вопросительного знака на мат: </label>
+                <input id="quest_mark_chance" name="quest_mark_chance" type="number" max="100" min="0" value="{{ quest_mark_chance }}"/>
+                <br/>
+                <label for="excl_mark_chance">Шанс замены точки на мат: </label>
+                <input id="excl_mark_chance" name="excl_mark_chance" type="number" max="100" min="0" value="{{ excl_mark_chance }}"/>
+                <br/>
+
+                <textarea id="text" name="text"></textarea>
+
+                <input type="submit" value="Преобразовать"/>
+            </form>
+        {% else %}
+            <a href="/">Обратно</a>
+            <p>Обработано. Вот ваш текст:</p>
+            <div style="height: 80vh; overflow-y: scroll; width: 80vw; border: solid 2px black; margin-left: auto; margin-right: auto;">
+                <p style="margin-left: 5px;">{{ text | safe }}</p>
+            </div>
+        {% endif %}
+    </body>
+</html>
