@@ -7,6 +7,13 @@ from main import REPLACES, modify
 app = Flask(__name__)
 
 
+def int_or_default(n, default=0):
+    try:
+        return int(n)
+    except ValueError:
+        return default
+
+
 @app.route('/', methods=['POST', 'GET'])
 def page_index():
     if request.method == 'GET':
@@ -22,11 +29,11 @@ def page_index():
         text = modify(
             request.form['text'],
             {
-                '.': int(request.form['dot_chance']),
-                ',': int(request.form['comma_chance']),
-                ' ': int(request.form['space_chance']),
-                '!': int(request.form['excl_mark_chance']),
-                '?': int(request.form['quest_mark_chance']),
+                '.': int_or_default(request.form['dot_chance'], REPLACES['.'].chance),
+                ',': int_or_default(request.form['comma_chance'], REPLACES[','].chance),
+                ' ': int_or_default(request.form['space_chance'], REPLACES[' '].chance),
+                '!': int_or_default(request.form['excl_mark_chance'], REPLACES['!'].chance),
+                '?': int_or_default(request.form['quest_mark_chance'], REPLACES['?'].chance)
             }
         ).replace('\n', '<br/>').replace(' ', '&nbsp;')
         return render_template('index.html', text=text)
