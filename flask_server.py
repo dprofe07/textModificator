@@ -14,7 +14,19 @@ def int_or_default(n, default=0):
         return default
 
 
-@app.route('/', methods=['POST', 'GET'])
+is_server = os.path.exists('/SERVER/is_server')
+
+if is_server:
+    prefix = '/text-modifier'
+    addr = '127.0.0.1'
+    port = 8045
+else:
+    prefix = ''
+    addr = '0.0.0.0'
+    port = 5000
+
+
+@app.route(prefix + '/', methods=['POST', 'GET'])
 def page_index():
     if request.method == 'GET':
         return render_template(
@@ -40,4 +52,4 @@ def page_index():
 
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', 8045)
+    app.run(addr, port)
